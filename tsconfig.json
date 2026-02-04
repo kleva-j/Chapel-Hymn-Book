@@ -1,0 +1,3 @@
+{
+  "extends": "@chapel-hymnbook/config/tsconfig.base.json"
+}
