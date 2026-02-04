@@ -1,26 +1,27 @@
-import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import { Platform, Pressable } from "react-native";
-import Animated, { FadeOut, ZoomIn } from "react-native-reanimated";
-import { withUniwind } from "uniwind";
 
 import { useAppTheme } from "@/contexts/app-theme-context";
+import { Platform, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { withUniwind } from "uniwind";
+
+import Animated, { FadeOut, ZoomIn } from "react-native-reanimated";
+
 
 const StyledIonicons = withUniwind(Ionicons);
 
 export function ThemeToggle() {
   const { toggleTheme, isLight } = useAppTheme();
 
+  const handlePress = () => {
+    if (Platform.OS === "ios") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    toggleTheme();
+  };
+
   return (
-    <Pressable
-      onPress={() => {
-        if (Platform.OS === "ios") {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }
-        toggleTheme();
-      }}
-      className="px-2.5"
-    >
+    <Pressable onPress={handlePress} className="px-2.5">
       {isLight ? (
         <Animated.View key="moon" entering={ZoomIn} exiting={FadeOut}>
           <StyledIonicons name="moon" size={20} className="text-foreground" />
