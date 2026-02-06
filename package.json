@@ -11,7 +11,10 @@
     "build": "turbo build",
     "check-types": "turbo check-types",
     "dev:native": "turbo -F native dev",
-    "dev:web": "turbo -F web dev"
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "deploy": "turbo -F @chapel-hymnbook/infra deploy",
+    "destroy": "turbo -F @chapel-hymnbook/infra destroy"
   },
   "dependencies": {
     "@chapel-hymnbook/env": "workspace:*",
@@ -20,6 +23,8 @@
   },
   "devDependencies": {
     "@chapel-hymnbook/config": "workspace:*",
+    "@cloudflare/workers-types": "catalog:",
+    "@types/node": "^22.13.14",
     "turbo": "^2.6.3",
     "typescript": "catalog:"
   },

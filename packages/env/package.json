@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./server": "./src/server.ts",
     "./native": "./src/native.ts"
   },
   "dependencies": {
@@ -13,6 +14,8 @@
   },
   "devDependencies": {
     "@chapel-hymnbook/config": "workspace:*",
+    "@chapel-hymnbook/infra": "workspace:*",
+    "@types/node": "^22.13.14",
     "typescript": "catalog:"
   }
 }
