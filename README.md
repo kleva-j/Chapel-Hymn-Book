@@ -41,7 +41,7 @@ For more details, see the guide on [Deploying to Cloudflare with Alchemy](https:
 
 ## Project Structure
 
-```
+```text
 chapel-hymn-book/
 ├── apps/
 │   ├── web/         # Frontend application ()

@@ -4,7 +4,7 @@
 
 import { Schema } from "effect";
 
-export class Hymn extends Schema.Class<Hymn>("Hymn")({
+export class HymnSchema extends Schema.Class<HymnSchema>("HymnSchema")({
   id: Schema.Number,
   title: Schema.NonEmptyString,
   number: Schema.Number,
@@ -14,6 +14,8 @@ export class Hymn extends Schema.Class<Hymn>("Hymn")({
   createdAt: Schema.Date,
   updatedAt: Schema.Date,
 }) {}
+
+export type Hymn = typeof HymnSchema.Type;
 
 const SEARCH_CRITERIA = {
   TITLE: "title",
@@ -31,7 +33,7 @@ export class SearchCriteria extends Schema.Class<SearchCriteria>(
 }) {}
 
 export class AppState extends Schema.Class<AppState>("AppState")({
-  currentHymn: Schema.optional(Hymn),
-  searchResults: Schema.Array(Hymn),
+  currentHymn: Schema.optional(HymnSchema),
+  searchResults: Schema.Array(HymnSchema),
   isLoading: Schema.Boolean,
 }) {}
