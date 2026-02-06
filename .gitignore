@@ -51,3 +51,10 @@ temp
 
 # Kiro
 .kiro/
+
+# agent
+.agent/
+.agents/
+
+# Windsurf
+.windsurf/
