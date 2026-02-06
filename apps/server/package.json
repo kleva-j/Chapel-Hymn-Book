@@ -1,6 +1,7 @@
 {
   "name": "server",
   "type": "module",
+  "private": true,
   "main": "src/index.ts",
   "scripts": {
     "build": "tsdown",

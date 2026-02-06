@@ -5,5 +5,5 @@ export default defineConfig({
   format: "esm",
   outDir: "./dist",
   clean: true,
-  noExternal: [/@Chapel-Hymn-Book\/.*/],
+  noExternal: [/@chapel-hymnbook\/.*/],
 });
