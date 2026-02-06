@@ -60,9 +60,21 @@ importers:
       '@react-navigation/elements':
         specifier: ^2.8.1
         version: 2.9.5(@react-navigation/native@7.1.28(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@tanstack/query-core':
+        specifier: ^5.90.20
+        version: 5.90.20
+      '@tanstack/react-query':
+        specifier: ^5.90.20
+        version: 5.90.20(react@19.1.0)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.91.3
+        version: 5.91.3(@tanstack/react-query@5.90.20(react@19.1.0))(react@19.1.0)
       dotenv:
         specifier: 'catalog:'
         version: 17.2.3
+      effect:
+        specifier: ^3.19.16
+        version: 3.19.16
       expo:
         specifier: ^54.0.23
         version: 54.0.33(@babel/core@7.29.0)(@expo/metro-runtime@6.1.2)(expo-router@6.0.23)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -87,6 +99,9 @@ importers:
       expo-secure-store:
         specifier: ~15.0.7
         version: 15.0.8(expo@54.0.33)
+      expo-sqlite:
+        specifier: ^16.0.10
+        version: 16.0.10(expo@54.0.33)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-status-bar:
         specifier: ~3.0.8
         version: 3.0.9(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -1254,6 +1269,9 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
+  '@standard-schema/spec@1.1.0':
+    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
   '@t3-oss/env-core@0.13.10':
     resolution: {integrity: sha512-NNFfdlJ+HmPHkLi2HKy7nwuat9SIYOxei9K10lO2YlcSObDILY7mHZNSHsieIM3A0/5OOzw/P/b+yLvPdaG52g==}
     peerDependencies:
@@ -1355,6 +1373,23 @@ packages:
   '@tailwindcss/oxide@4.1.17':
     resolution: {integrity: sha512-F0F7d01fmkQhsTjXezGBLdrl1KresJTcI3DB8EkScCldyKp3Msz4hub4uyYaVnk88BAS1g5DQjjF6F5qczheLA==}
     engines: {node: '>= 10'}
+
+  '@tanstack/query-core@5.90.20':
+    resolution: {integrity: sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==}
+
+  '@tanstack/query-devtools@5.93.0':
+    resolution: {integrity: sha512-+kpsx1NQnOFTZsw6HAFCW3HkKg0+2cepGtAWXjiiSOJJ1CtQpt72EE2nyZb+AjAbLRPoeRmPJ8MtQd8r8gsPdg==}
+
+  '@tanstack/react-query-devtools@5.91.3':
+    resolution: {integrity: sha512-nlahjMtd/J1h7IzOOfqeyDh5LNfG0eULwlltPEonYy0QL+nqrBB+nyzJfULV+moL7sZyxc2sHdNJki+vLA9BSA==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.90.20
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.90.20':
+    resolution: {integrity: sha512-vXBxa+qeyveVO7OA0jX1z+DeyCA4JKnThKv411jd5SORpBKgkcVnYKCiBgECvADvniBX7tobwBmg01qq9JmMJw==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -1482,6 +1517,9 @@ packages:
 
   async-limiter@1.0.1:
     resolution: {integrity: sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==}
+
+  await-lock@2.2.2:
+    resolution: {integrity: sha512-aDczADvlvTGajTDjcjpJMqRkOF6Qdz3YbPZm/PyW6tKPkx2hlYBzxMhEywM/tU72HrVZjgl5VCdRuMlA7pZ8Gw==}
 
   babel-jest@29.7.0:
     resolution: {integrity: sha512-BrvGY3xZSwEcCzKvKsCi2GgHqDqsYkOP4/by5xCgIwGXQxIEh+8ew3gmrE1y7XRR6LHZIj6yLYnUi/mm2KXKBg==}
@@ -1839,6 +1877,9 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
+  effect@3.19.16:
+    resolution: {integrity: sha512-7+XC3vGrbAhCHd8LTFHvnZjRpZKZ8YHRZqJTkpNoxcJ2mCyNs2SwI+6VkV/ij8Y3YW7wfBN4EbU06/F5+m/wkQ==}
+
   electron-to-chromium@1.5.286:
     resolution: {integrity: sha512-9tfDXhJ4RKFNerfjdCcZfufu49vg620741MNs26a9+bhLThdB+plgMeou98CAaHu/WATj2iHOOHTp1hWtABj2A==}
 
@@ -2005,6 +2046,13 @@ packages:
     resolution: {integrity: sha512-IGR++flYH70rhLyeXF0Phle56/k4cee87WeQ4mamS+MkVAVP+dDlOHf2nN06Z9Y2KhU0Gp1k+y61KkghF7HdhA==}
     engines: {node: '>=20.16.0'}
 
+  expo-sqlite@16.0.10:
+    resolution: {integrity: sha512-tUOKxE9TpfneRG3eOfbNfhN9236SJ7IiUnP8gCqU7umd9DtgDGB/5PhYVVfl+U7KskgolgNoB9v9OZ9iwXN8Eg==}
+    peerDependencies:
+      expo: '*'
+      react: '*'
+      react-native: '*'
+
   expo-status-bar@3.0.9:
     resolution: {integrity: sha512-xyYyVg6V1/SSOZWh4Ni3U129XHCnFHBTcUo0dhWtFDrZbNp/duw5AGsQfb2sVeU0gxWHXSY1+5F0jnKYC7WuOw==}
     peerDependencies:
@@ -2030,6 +2078,10 @@ packages:
 
   exponential-backoff@3.1.3:
     resolution: {integrity: sha512-ZgEeZXj30q+I0EN+CbSSpIyPaJ5HVQD18Z1m+u1FXbAeT94mr1zw50q4q6jiiC447Nl/YTcIYSAftiGqetwXCA==}
+
+  fast-check@3.23.2:
+    resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
+    engines: {node: '>=8.0.0'}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -2841,6 +2893,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pure-rand@6.1.0:
+    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   qrcode-terminal@0.11.0:
     resolution: {integrity: sha512-Uu7ii+FQy4Qf82G4xu7ShHhjhGahEpCWc3x8UavY3CTcWV+ufmmCtwkr7ZKsX42jdL0kr1B5FKUeqJvAn51jzQ==}
@@ -5046,6 +5101,8 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
+  '@standard-schema/spec@1.1.0': {}
+
   '@t3-oss/env-core@0.13.10(typescript@5.9.3)(zod@4.3.6)':
     optionalDependencies:
       typescript: 5.9.3
@@ -5111,6 +5168,21 @@ snapshots:
       '@tailwindcss/oxide-wasm32-wasi': 4.1.17
       '@tailwindcss/oxide-win32-arm64-msvc': 4.1.17
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.17
+
+  '@tanstack/query-core@5.90.20': {}
+
+  '@tanstack/query-devtools@5.93.0': {}
+
+  '@tanstack/react-query-devtools@5.91.3(@tanstack/react-query@5.90.20(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@tanstack/query-devtools': 5.93.0
+      '@tanstack/react-query': 5.90.20(react@19.1.0)
+      react: 19.1.0
+
+  '@tanstack/react-query@5.90.20(react@19.1.0)':
+    dependencies:
+      '@tanstack/query-core': 5.90.20
+      react: 19.1.0
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -5236,6 +5308,8 @@ snapshots:
   asap@2.0.6: {}
 
   async-limiter@1.0.1: {}
+
+  await-lock@2.2.2: {}
 
   babel-jest@29.7.0(@babel/core@7.29.0):
     dependencies:
@@ -5643,6 +5717,11 @@ snapshots:
 
   ee-first@1.1.1: {}
 
+  effect@3.19.16:
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      fast-check: 3.23.2
+
   electron-to-chromium@1.5.286: {}
 
   emoji-regex@8.0.0: {}
@@ -5801,6 +5880,13 @@ snapshots:
 
   expo-server@1.0.5: {}
 
+  expo-sqlite@16.0.10(expo@54.0.33)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+    dependencies:
+      await-lock: 2.2.2
+      expo: 54.0.33(@babel/core@7.29.0)(@expo/metro-runtime@6.1.2)(expo-router@6.0.23)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-native: 0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
+
   expo-status-bar@3.0.9(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       react: 19.1.0
@@ -5843,6 +5929,10 @@ snapshots:
       - utf-8-validate
 
   exponential-backoff@3.1.3: {}
+
+  fast-check@3.23.2:
+    dependencies:
+      pure-rand: 6.1.0
 
   fast-deep-equal@3.1.3: {}
 
@@ -6688,6 +6778,8 @@ snapshots:
       sisteransi: 1.0.5
 
   punycode@2.3.1: {}
+
+  pure-rand@6.1.0: {}
 
   qrcode-terminal@0.11.0: {}
 
