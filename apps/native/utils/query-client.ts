@@ -5,15 +5,15 @@
 import { QueryClient } from "@tanstack/react-query";
 
 export interface QueryKeys {
-  readonly hymns: ["hymns"];
-  readonly hymn: ["hymn", number];
-  readonly search: ["search", string];
+  hymns(): ["hymns"];
+  hymn(id: number): ["hymn", number];
+  search(q: string): ["search", string];
 }
 
 export const queryKeys: QueryKeys = {
-  hymns: ["hymns"],
-  hymn: ["hymn", 0], // Template, actual number will be provided at runtime
-  search: ["search", ""], // Template, actual query will be provided at runtime
+  hymns: () => ["hymns"],
+  hymn: (id: number) => ["hymn", id],
+  search: (q: string) => ["search", q],
 };
 
 export interface CacheConfig {

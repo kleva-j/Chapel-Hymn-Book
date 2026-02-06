@@ -21,9 +21,7 @@ const SEARCH_CRITERIA = {
   CONTENT: "content",
 } as const;
 
-export const SearchType = Schema.Union(
-  ...Object.values(SEARCH_CRITERIA).map((value) => Schema.Literal(value)),
-);
+export const SearchType = Schema.Literal(...Object.values(SEARCH_CRITERIA));
 
 export class SearchCriteria extends Schema.Class<SearchCriteria>(
   "SearchCriteria",
