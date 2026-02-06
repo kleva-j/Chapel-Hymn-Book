@@ -58,3 +58,6 @@ temp
 
 # Windsurf
 .windsurf/
+
+# Temporary Files
+temp.md

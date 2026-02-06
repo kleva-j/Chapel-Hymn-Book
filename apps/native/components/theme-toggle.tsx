@@ -7,7 +7,6 @@ import { withUniwind } from "uniwind";
 
 import Animated, { FadeOut, ZoomIn } from "react-native-reanimated";
 
-
 const StyledIonicons = withUniwind(Ionicons);
 
 export function ThemeToggle() {
