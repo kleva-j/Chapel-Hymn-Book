@@ -4,18 +4,16 @@
 
 import { Schema } from "effect";
 
-export class HymnSchema extends Schema.Class<HymnSchema>("HymnSchema")({
+export class Hymn extends Schema.Class<Hymn>("Hymn")({
   id: Schema.Number,
-  title: Schema.NonEmptyString,
+  title: Schema.String,
   number: Schema.Number,
-  content: Schema.NonEmptyString,
-  verses: Schema.Array(Schema.NonEmptyString),
-  chorus: Schema.optional(Schema.NonEmptyString),
+  content: Schema.String,
+  verses: Schema.Array(Schema.String),
+  chorus: Schema.optional(Schema.String),
   createdAt: Schema.Date,
   updatedAt: Schema.Date,
 }) {}
-
-export type Hymn = typeof HymnSchema.Type;
 
 const SEARCH_CRITERIA = {
   TITLE: "title",
@@ -33,7 +31,7 @@ export class SearchCriteria extends Schema.Class<SearchCriteria>(
 }) {}
 
 export class AppState extends Schema.Class<AppState>("AppState")({
-  currentHymn: Schema.optional(HymnSchema),
-  searchResults: Schema.Array(HymnSchema),
+  currentHymn: Schema.optional(Hymn),
+  searchResults: Schema.Array(Hymn),
   isLoading: Schema.Boolean,
 }) {}
