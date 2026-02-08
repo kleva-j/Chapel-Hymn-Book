@@ -1,6 +1,6 @@
 import { Hymn } from "@/data/models";
-import { z } from "zod";
 import { Effect } from "effect";
+import { z } from "zod";
 
 import {
   localStorageCollectionOptions,
@@ -63,7 +63,14 @@ export const initializeStore = () =>
     }
   }).pipe(
     Effect.catchAll((error: Error) =>
-      Effect.logError(`Failed to initialize hymn store: ${error.message}`),
+      Effect.logError(`Failed to initialize hymn store: ${error.message}`).pipe(
+        Effect.andThen(
+          Effect.sync(() => {
+            HymnsCollection.cleanup();
+            HymnsCollection.utils.clearStorage();
+          }),
+        ),
+        Effect.asVoid,
+      ),
     ),
-    Effect.runPromise,
   );

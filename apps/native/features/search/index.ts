@@ -3,5 +3,4 @@
  * This module will contain components for searching hymns
  */
 
-// Placeholder for search feature components
-export {};
+export { SearchBar } from "./search-bar";

@@ -3,7 +3,7 @@
  * Contains sample hymns for testing and initial database population
  */
 
-import { Hymn } from "../models";
+import type { Hymn } from "../models";
 
 /**
  * Sample hymns for database initialization
