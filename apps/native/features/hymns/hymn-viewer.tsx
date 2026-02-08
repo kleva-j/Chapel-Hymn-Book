@@ -46,7 +46,7 @@ export const HymnViewer: FC<HymnViewerProps> = ({ hymn }) => {
 
       {/* Optional Chorus */}
       {hymn.chorus && (
-        <View className="bg-gray-100 p-4 mb-4 dark:bg-black">
+        <View className="bg-gray-100 p-4 mb-4 dark:bg-gray-900/60 rounded-xl">
           <Text className="text-[14px] font-bold text-gray-500 mb-2 uppercase tracking-widest">
             Chorus
           </Text>

@@ -27,6 +27,7 @@ export const HymnList: FC<HymnListProps> = ({ hymns, onHymnPress }) => {
   return (
     <FlatList
       data={hymns as Hymn[]}
+      className="flex-1 bg-background px-4"
       renderItem={({ item }: { item: Hymn }) => (
         <TouchableOpacity
           className="flex-row items-center py-2 px-3 bg-gray-100 dark:bg-black"

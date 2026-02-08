@@ -65,10 +65,18 @@ export const initializeStore = () =>
     Effect.catchAll((error: Error) =>
       Effect.logError(`Failed to initialize hymn store: ${error.message}`).pipe(
         Effect.andThen(
-          Effect.sync(() => {
-            HymnsCollection.cleanup();
-            HymnsCollection.utils.clearStorage();
-          }),
+          Effect.try({
+            try: () => {
+              HymnsCollection.cleanup();
+              HymnsCollection.utils.clearStorage();
+            },
+            catch: (cleanupError) =>
+              new Error(`Cleanup also failed: ${cleanupError}`),
+          }).pipe(
+            Effect.catchAll((cleanupError) =>
+              Effect.logError(cleanupError.message),
+            ),
+          ),
         ),
         Effect.asVoid,
       ),
