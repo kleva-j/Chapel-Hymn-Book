@@ -1,49 +1,36 @@
 import { Stack, useLocalSearchParams } from "expo-router";
+import { TABLE_NAME, rowToHymn } from "@/data/database";
 import { Container } from "@/components/container";
 import { HymnViewer } from "@/features/hymns";
-import { seedHymns } from "@/data/database";
+import { useRow } from "tinybase/ui-react";
+import { router } from "expo-router";
 import { Text } from "react-native";
+import { useEffect } from "react";
 
-function useHymnById(id: number) {
-  const hymn = seedHymns.find((h) => h.id === id);
-  return { hymn };
-}
-
-export default function Hymn() {
+export default function HymnPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const { hymn } = useHymnById(Number(id));
+  const safeId = Array.isArray(id) ? id[0] : id;
+  const row = useRow(TABLE_NAME, safeId);
+  const hymn = rowToHymn(row);
 
-  // if (isLoading) {
-  //   return (
-  //     <Container className="flex-1 justify-center items-center bg-white p-5">
-  //       <ActivityIndicator size="large" color="#6B7280" />
-  //       <Text className="mt-4 text-gray-500 font-medium">Loading hymn...</Text>
-  //     </Container>
-  //   );
-  // }
-
-  // if (isError) {
-  //   return (
-  //     <Container className="flex-1 justify-center items-center bg-white p-5">
-  //       <Text className="text-red-500 font-bold text-lg mb-2">Oops!</Text>
-  //       <Text className="text-gray-600 text-center">
-  //         Something went wrong while loading the hymn. Please try again later.
-  //       </Text>
-  //     </Container>
-  //   );
-  // }
+  useEffect(() => {
+    if (!safeId) router.replace("/");
+  }, [safeId]);
 
   if (!hymn) {
     return (
-      <Container className="flex-1 justify-center items-center bg-white p-5">
-        <Text className="text-gray-400 font-bold text-lg mb-2">
-          Hymn Not Found
-        </Text>
-        <Text className="text-gray-500 text-center">
-          The hymn you're looking for doesn't seem to exist.
-        </Text>
-      </Container>
+      <>
+        <Stack.Screen options={{ title: "Hymn Not Found" }} />
+        <Container className="flex-1 justify-center items-center bg-white dark:bg-black p-5">
+          <Text className="text-gray-400 font-bold text-lg mb-2 dark:text-gray-400">
+            Hymn Not Found
+          </Text>
+          <Text className="text-gray-500 text-center dark:text-gray-400">
+            The hymn you're looking for doesn't seem to exist.
+          </Text>
+        </Container>
+      </>
     );
   }
 

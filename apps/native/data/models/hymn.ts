@@ -11,8 +11,6 @@ export class Hymn extends Schema.Class<Hymn>("Hymn")({
   content: Schema.String,
   verses: Schema.Array(Schema.String),
   chorus: Schema.optional(Schema.String),
-  createdAt: Schema.Date,
-  updatedAt: Schema.Date,
 }) {}
 
 const SEARCH_CRITERIA = {

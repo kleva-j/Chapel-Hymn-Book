@@ -1,9 +1,3 @@
-/**
- * TanStack Query configuration and setup
- */
-
-import { QueryClient } from "@tanstack/react-query";
-
 export interface QueryKeys {
   hymns(): ["hymns"];
   hymn(id: number): ["hymn", number];
@@ -27,13 +21,3 @@ export const cacheConfig: CacheConfig = {
   cacheTime: 10 * 60 * 1000, // 10 minutes
   refetchOnWindowFocus: false,
 };
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: cacheConfig.staleTime,
-      gcTime: cacheConfig.cacheTime,
-      refetchOnWindowFocus: cacheConfig.refetchOnWindowFocus,
-    },
-  },
-});

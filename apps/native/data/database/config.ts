@@ -1,4 +1,32 @@
+import { createMergeableStore } from "tinybase/mergeable-store";
+import { useCreateMergeableStore } from "tinybase/ui-react";
+import { seedHymns } from "./seed-data";
+
 /**
- * Database configuration for TanStack DB with SQLite
+ * Database configuration for Tinybase
  */
-export {};
+const TABLE_NAME = "hymns";
+const TEXT_CELL = "text";
+
+const useHymnStore = () => {
+  return useCreateMergeableStore(() =>
+    createMergeableStore()
+      .setTables({
+        hymns: Object.fromEntries(
+          seedHymns.map((hymn) => [
+            String(hymn.id),
+            {
+              id: String(hymn.id),
+              title: hymn.title,
+              number: hymn.number,
+              content: hymn.content,
+              verses: JSON.stringify(hymn.verses),
+              chorus: hymn.chorus ?? "",
+            },
+          ]),
+        ),
+      }),
+  );
+};
+
+export { TABLE_NAME, TEXT_CELL, useHymnStore };
