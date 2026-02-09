@@ -2,12 +2,12 @@ import "@/global.css";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import { Provider as TinybaseProvider } from "tinybase/ui-react";
 import { HeroUINativeProvider } from "heroui-native";
 import { Stack } from "expo-router";
 
-import { Provider as TinybaseProvider } from "tinybase/ui-react";
 import { AppThemeProvider } from "@/contexts/app-theme-context";
-import { createStore } from "@/data/database";
+import { useHymnStore } from "@/data/database";
 
 export const unstable_settings = { initialRouteName: "(drawer)" };
 
@@ -24,7 +24,7 @@ function StackLayout() {
 }
 
 export default function Layout() {
-  const store = createStore();
+  const store = useHymnStore();
 
   return (
     <TinybaseProvider store={store}>

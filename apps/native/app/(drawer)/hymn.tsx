@@ -1,36 +1,30 @@
-import type { Hymn } from "@/data/models";
-
 import { Stack, useLocalSearchParams } from "expo-router";
+import { TABLE_NAME, rowToHymn } from "@/data/database";
 import { Container } from "@/components/container";
 import { HymnViewer } from "@/features/hymns";
-import { useStore } from "tinybase/ui-react";
-import { TABLE_NAME } from "@/data/database";
+import { useRow } from "tinybase/ui-react";
+import { router } from "expo-router";
 import { Text } from "react-native";
 
 export default function HymnPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  if (!id || Array.isArray(id)) {
+    router.replace("/");
+    return;
+  }
 
-  const store = useStore();
-
-  const row = store?.getRow(TABLE_NAME, id);
-  const hymn = row
-    ? ({
-        ...row,
-        id: Number(row.id),
-        number: Number(row.number),
-        verses: JSON.parse(row.verses as string),
-      } as Hymn)
-    : undefined;
+  const row = useRow(TABLE_NAME, id);
+  const hymn = rowToHymn(row);
 
   if (!hymn) {
     return (
       <>
         <Stack.Screen options={{ title: "Hymn Not Found" }} />
-        <Container className="flex-1 justify-center items-center bg-white p-5">
-          <Text className="text-gray-400 font-bold text-lg mb-2">
+        <Container className="flex-1 justify-center items-center bg-white dark:bg-black p-5">
+          <Text className="text-gray-400 font-bold text-lg mb-2 dark:text-gray-400">
             Hymn Not Found
           </Text>
-          <Text className="text-gray-500 text-center">
+          <Text className="text-gray-500 text-center dark:text-gray-400">
             The hymn you're looking for doesn't seem to exist.
           </Text>
         </Container>

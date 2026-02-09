@@ -8,7 +8,7 @@ import { seedHymns } from "./seed-data";
 const TABLE_NAME = "hymns";
 const TEXT_CELL = "text";
 
-const createStore = () => {
+const useHymnStore = () => {
   return useCreateMergeableStore(() =>
     createMergeableStore()
       .setTables({
@@ -29,4 +29,4 @@ const createStore = () => {
   );
 };
 
-export { TABLE_NAME, TEXT_CELL, createStore };
+export { TABLE_NAME, TEXT_CELL, useHymnStore };
