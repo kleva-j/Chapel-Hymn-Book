@@ -5,15 +5,15 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { HeroUINativeProvider } from "heroui-native";
 import { Stack } from "expo-router";
 
+import { Provider as TinybaseProvider } from "tinybase/ui-react";
 import { AppThemeProvider } from "@/contexts/app-theme-context";
+import { createStore } from "@/data/database";
 
-export const unstable_settings = {
-  initialRouteName: "(drawer)",
-};
+export const unstable_settings = { initialRouteName: "(drawer)" };
 
 function StackLayout() {
   return (
-    <Stack screenOptions={{}}>
+    <Stack>
       <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
       <Stack.Screen
         name="modal"
@@ -24,15 +24,19 @@ function StackLayout() {
 }
 
 export default function Layout() {
+  const store = createStore();
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <KeyboardProvider>
-        <AppThemeProvider>
-          <HeroUINativeProvider>
-            <StackLayout />
-          </HeroUINativeProvider>
-        </AppThemeProvider>
-      </KeyboardProvider>
-    </GestureHandlerRootView>
+    <TinybaseProvider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <KeyboardProvider>
+          <AppThemeProvider>
+            <HeroUINativeProvider>
+              <StackLayout />
+            </HeroUINativeProvider>
+          </AppThemeProvider>
+        </KeyboardProvider>
+      </GestureHandlerRootView>
+    </TinybaseProvider>
   );
 }
