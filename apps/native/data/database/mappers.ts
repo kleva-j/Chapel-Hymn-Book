@@ -6,7 +6,7 @@ import type { Row } from "tinybase";
  * Handles type conversions for id/number and parses the verses JSON string.
  */
 export const rowToHymn = (row: Row | undefined): Hymn | undefined => {
-  if (!row) return undefined;
+  if (!row || Object.keys(row).length === 0) return undefined;
 
   let verses: string[] = [];
   if (typeof row.verses === "string") {
