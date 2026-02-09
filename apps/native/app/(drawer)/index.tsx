@@ -14,6 +14,7 @@ export default function Home() {
   const hymns = sortedRowIds
     .map((id) => store?.getRow(TABLE_NAME, id))
     .filter((row): row is NonNullable<typeof row> => !!row)
+    .sort((a, b) => Number(a.id) - Number(b.id))
     .map((row) => ({
       ...row,
       id: Number(row.id),
