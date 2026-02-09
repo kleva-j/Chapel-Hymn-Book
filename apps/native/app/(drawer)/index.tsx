@@ -1,19 +1,18 @@
 import type { Hymn } from "@/data/models";
 
-import { useRow, useSortedRowIds } from "tinybase/ui-react";
 import { TABLE_NAME, rowToHymn } from "@/data/database";
+import { useTable } from "tinybase/ui-react";
 import { HymnList } from "@/features/hymns";
 import { router } from "expo-router";
 import { useCallback } from "react";
 
 export default function Home() {
-  const sortedRowIds = useSortedRowIds(TABLE_NAME);
+  const table = useTable(TABLE_NAME);
 
-  const hymns = sortedRowIds
-    .map((id) => useRow(TABLE_NAME, id))
+  const hymns = Object.values(table)
     .map(rowToHymn)
     .filter((hymn): hymn is Hymn => !!hymn)
-    .sort((a, b) => a.id - b.id);
+    .sort((a, b) => a.number - b.number);
 
   const handleHymnPress = useCallback((hymn: Hymn) => {
     router.push(`/hymn?id=${hymn.id}`);

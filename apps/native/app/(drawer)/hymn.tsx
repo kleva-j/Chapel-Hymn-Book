@@ -5,16 +5,18 @@ import { HymnViewer } from "@/features/hymns";
 import { useRow } from "tinybase/ui-react";
 import { router } from "expo-router";
 import { Text } from "react-native";
+import { useEffect } from "react";
 
 export default function HymnPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  if (!id || Array.isArray(id)) {
-    router.replace("/");
-    return;
-  }
 
-  const row = useRow(TABLE_NAME, id);
+  const safeId = Array.isArray(id) ? id[0] : id;
+  const row = useRow(TABLE_NAME, safeId);
   const hymn = rowToHymn(row);
+
+  useEffect(() => {
+    if (!safeId) router.replace("/");
+  }, [safeId]);
 
   if (!hymn) {
     return (

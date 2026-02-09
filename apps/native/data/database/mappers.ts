@@ -12,6 +12,13 @@ export const rowToHymn = (row: Row | undefined): Hymn | undefined => {
   if (typeof row.verses === "string") {
     try {
       verses = JSON.parse(row.verses);
+      if (
+        !Array.isArray(verses) ||
+        !verses.every((v) => typeof v === "string")
+      ) {
+        console.error(`Invalid verses format for hymn ${row.id}`);
+        verses = [];
+      }
     } catch (e) {
       console.error(`Error parsing verses for hymn ${row.id}:`, e);
       verses = [];

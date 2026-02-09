@@ -11,6 +11,4 @@ export const HymnZodSchema = z.object({
   content: z.string(),
   verses: z.array(z.string()).readonly(),
   chorus: z.string().optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
 });
