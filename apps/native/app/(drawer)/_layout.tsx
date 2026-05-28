@@ -1,4 +1,4 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { useThemeColor } from "heroui-native";
@@ -45,13 +45,15 @@ function DrawerLayout() {
       <Drawer.Screen
         name="(tabs)"
         options={{
-          headerTitle: "Tabs",
+          headerTitle: "Hymns",
           drawerLabel: ({ color, focused }) => (
-            <Text style={{ color: focused ? color : themeColorForeground }}>Tabs</Text>
+            <Text style={{ color: focused ? color : themeColorForeground }}>
+              Hymns
+            </Text>
           ),
           drawerIcon: ({ size, color, focused }) => (
-            <MaterialIcons
-              name="border-bottom"
+            <Ionicons
+              name="musical-notes-outline"
               size={size}
               color={focused ? color : themeColorForeground}
             />
