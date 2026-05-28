@@ -1,7 +1,6 @@
-import { Button, Chip, Divider, Spinner, Surface, useThemeColor } from "heroui-native";
 import { Text, View } from "react-native";
 
-import { Container } from "@/components/container";
+import { Container } from "../../components/container";
 
 export default function Home() {
   return (

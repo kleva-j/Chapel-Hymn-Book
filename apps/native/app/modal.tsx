@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { Button, Surface, useThemeColor } from "heroui-native";
 import { Text, View } from "react-native";
 
-import { Container } from "@/components/container";
+import { Container } from "../components/container";
 
 function Modal() {
   const accentForegroundColor = useThemeColor("accent-foreground");

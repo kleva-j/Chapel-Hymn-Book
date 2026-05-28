@@ -1,12 +1,12 @@
 import * as Haptics from "expo-haptics";
 
-import { useAppTheme } from "@/contexts/app-theme-context";
 import { Platform, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { withUniwind } from "uniwind";
 
 import Animated, { FadeOut, ZoomIn } from "react-native-reanimated";
 
+import { useAppTheme } from "../contexts/app-theme-context";
 
 const StyledIonicons = withUniwind(Ionicons);
 
