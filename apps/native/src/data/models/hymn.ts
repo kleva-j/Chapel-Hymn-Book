@@ -6,6 +6,7 @@ export interface Hymn {
   readonly id: number;
   readonly title: string;
   readonly number: number;
+  readonly language: string | null;
   readonly content: string;
   readonly verses: ReadonlyArray<string>;
   readonly chorus?: string; // Optional chorus for hymns that have one
@@ -15,7 +16,7 @@ export interface Hymn {
 
 export interface SearchCriteria {
   readonly query: string;
-  readonly searchType: "title" | "number" | "content";
+  readonly searchType: "title" | "number" | "content" | "language";
 }
 
 export interface AppState {
