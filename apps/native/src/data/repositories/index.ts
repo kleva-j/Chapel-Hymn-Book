@@ -1,6 +1,5 @@
 /**
- * Export all repository interfaces and implementations
+ * Repository barrel.
  */
 
-export * from "./hymn-repository";
 export * from "./hymn-repository-sqlite";

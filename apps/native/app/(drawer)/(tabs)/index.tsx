@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { Button } from "heroui-native";
 
 import type { Hymn } from "../../../src/data/models";
 import { useHymns } from "../../../src/utils/use-hymns";
@@ -31,7 +30,7 @@ function formatError(e: unknown): string {
 }
 
 export default function HymnsScreen() {
-  const { data, isLoading, isError, error, refetch, isRefetching } = useHymns();
+  const { data, isLoading, error } = useHymns();
   const insets = useSafeAreaInsets();
 
   const keyExtractor = useCallback((h: Hymn) => String(h.id), []);
@@ -49,7 +48,7 @@ export default function HymnsScreen() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <View className="flex-1 bg-background items-center justify-center p-6">
         <Text className="text-foreground text-base mb-3">
@@ -58,9 +57,6 @@ export default function HymnsScreen() {
         <Text className="text-muted text-xs mb-4 text-center">
           {formatError(error)}
         </Text>
-        <Button onPress={() => refetch()} size="sm">
-          <Button.Label>Retry</Button.Label>
-        </Button>
       </View>
     );
   }
@@ -73,7 +69,7 @@ export default function HymnsScreen() {
       style={{ paddingTop: insets.top }}
     >
       <FlatList
-        data={hymns}
+        data={hymns as Hymn[]}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         ItemSeparatorComponent={Separator}
@@ -84,8 +80,6 @@ export default function HymnsScreen() {
             <Text className="text-muted">No hymns found.</Text>
           </View>
         }
-        refreshing={isRefetching}
-        onRefresh={refetch}
         initialNumToRender={20}
         windowSize={10}
         removeClippedSubviews

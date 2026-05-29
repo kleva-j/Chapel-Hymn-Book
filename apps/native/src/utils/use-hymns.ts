@@ -1,46 +1,97 @@
 /**
- * TanStack Query hooks bridging React components to the Effect.TS programs.
+ * Reactive hymn data hooks backed by Drizzle's `useLiveQuery`.
  *
- * Each hook runs the corresponding Effect via Effect.runPromise — TanStack
- * Query handles caching, deduplication, and re-renders. Effect handles
- * typed errors and orchestration in the data layer.
+ * Each hook subscribes to the underlying `hymns` table via expo-sqlite's
+ * change listener and re-renders automatically when rows change. No manual
+ * cache invalidation, no refetch — writes anywhere in the app propagate.
+ *
+ * Returned shape keeps the previous TanStack Query bridge surface so screen
+ * code only needs minor adaptations:
+ *   - `data` (mapped Hymn[]) replaces TanStack's `data: Hymn[]`
+ *   - `isLoading` is `data === undefined` (first run before subscription)
+ *   - `error` is the underlying live-query error
  */
 
-import { useQuery } from "@tanstack/react-query";
-import { Effect } from "effect";
+import type { Hymn } from "../data/models";
 
-import { hymnPrograms } from "../effects/hymn-programs-impl";
-import { queryKeys } from "./query-client";
+import { useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { eq, sql } from "drizzle-orm";
+import { useMemo } from "react";
 
-// Disable retries on every hymn query: failures here are SQLite/schema
-// errors or typed not-found cases, not transient network problems. The
-// default 3-attempt retry burns DB work and leaves screens stuck in
-// loading state longer than necessary.
-const noRetry = { retry: false as const };
+import {
+  escapeLike,
+  mapRow,
+} from "../data/repositories/hymn-repository-sqlite";
+import { hymns } from "../data/database/schema";
+import { db } from "../data/database/service";
 
-export function useHymns() {
-  return useQuery({
-    queryKey: queryKeys.hymns,
-    queryFn: () => Effect.runPromise(hymnPrograms.initializeApp),
-    ...noRetry,
-  });
+export interface UseHymnsResult {
+  readonly data: ReadonlyArray<Hymn> | undefined;
+  readonly isLoading: boolean;
+  readonly error: Error | undefined;
 }
 
-export function useHymn(id: number) {
-  return useQuery({
-    queryKey: ["hymn", id] as const,
-    queryFn: () => Effect.runPromise(hymnPrograms.loadHymn(id)),
-    enabled: Number.isFinite(id) && id > 0,
-    ...noRetry,
-  });
+export interface UseHymnResult {
+  readonly data: Hymn | undefined;
+  readonly isLoading: boolean;
+  readonly error: Error | undefined;
 }
 
-export function useHymnSearch(query: string) {
+export function useHymns(): UseHymnsResult {
+  const result = useLiveQuery(db.select().from(hymns).orderBy(hymns.number));
+
+  const data = useMemo(
+    () => (result.data ? result.data.map(mapRow) : undefined),
+    [result.data],
+  );
+
+  return {
+    data,
+    isLoading: data === undefined,
+    error: result.error,
+  };
+}
+
+export function useHymn(id: number): UseHymnResult {
+  const enabled = Number.isFinite(id) && id > 0;
+  const result = useLiveQuery(
+    db.select().from(hymns).where(eq(hymns.id, id)).limit(1),
+  );
+
+  const data = useMemo(() => {
+    if (!enabled) return undefined;
+    return result.data && result.data[0] ? mapRow(result.data[0]) : undefined;
+  }, [enabled, result.data]);
+
+  return {
+    data,
+    isLoading: enabled && result.data === undefined,
+    error: result.error,
+  };
+}
+
+export function useHymnSearch(query: string): UseHymnsResult {
   const trimmed = query.trim();
-  return useQuery({
-    queryKey: ["search", trimmed] as const,
-    queryFn: () => Effect.runPromise(hymnPrograms.searchHymns(trimmed)),
-    enabled: trimmed.length > 0,
-    ...noRetry,
-  });
+  // Escape user input so `%` and `_` match literally rather than acting as
+  // wildcards; pair with `ESCAPE '\\'` on the SQL side.
+  const pattern = `%${escapeLike(trimmed)}%`;
+  const result = useLiveQuery(
+    db
+      .select()
+      .from(hymns)
+      .where(sql`${hymns.title} LIKE ${pattern} ESCAPE '\\'`)
+      .orderBy(hymns.number)
+      .limit(100),
+  );
+
+  const data = useMemo(() => {
+    if (!trimmed) return [] as ReadonlyArray<Hymn>;
+    return result.data ? result.data.map(mapRow) : undefined;
+  }, [trimmed, result.data]);
+
+  return {
+    data,
+    isLoading: trimmed.length > 0 && data === undefined,
+    error: result.error,
+  };
 }
