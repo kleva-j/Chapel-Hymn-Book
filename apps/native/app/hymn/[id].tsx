@@ -19,7 +19,7 @@ import { useHymn } from "../../src/utils/use-hymns";
 export default function HymnDetailScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const id = Number.parseInt(params.id ?? "0", 10);
-  const { data: hymn, isLoading, isError } = useHymn(id);
+  const { data: hymn, isLoading, error } = useHymn(id);
   const insets = useSafeAreaInsets();
   const foreground = useThemeColor("foreground");
 
@@ -47,7 +47,7 @@ export default function HymnDetailScreen() {
     );
   }
 
-  if (isError || !hymn) {
+  if (error || !hymn) {
     return (
       <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
         <Header onBack={handleBack} foreground={foreground} title="Not found" />
