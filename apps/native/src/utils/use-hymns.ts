@@ -15,11 +15,11 @@
 import type { Hymn } from "../data/models";
 
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
-import { eq, sql } from "drizzle-orm";
-import { useMemo } from "react";
+import { eq } from "drizzle-orm";
+import { useEffect, useMemo, useState } from "react";
 
 import {
-  escapeLike,
+  hymnRepository,
   mapRow,
 } from "../data/repositories/hymn-repository-sqlite";
 import { hymns } from "../data/database/schema";
@@ -70,28 +70,55 @@ export function useHymn(id: number): UseHymnResult {
   };
 }
 
+/**
+ * Search against `hymns_fts` (with LIKE fallback) via the repository. Unlike
+ * `useHymns()` this is not a `useLiveQuery` subscription — the search SQL is
+ * built dynamically per query (number routing, FTS5 prefix tokens, fallback
+ * branches) and the underlying `hymns` table is read-only after seed, so a
+ * one-shot fetch per query change is sufficient.
+ *
+ * Callers using React 19's `useDeferredValue` on the input string keep
+ * typing snappy: the deferred value drives this hook, and React de-prioritizes
+ * the result re-render until the user pauses.
+ */
 export function useHymnSearch(query: string): UseHymnsResult {
   const trimmed = query.trim();
-  // Escape user input so `%` and `_` match literally rather than acting as
-  // wildcards; pair with `ESCAPE '\\'` on the SQL side.
-  const pattern = `%${escapeLike(trimmed)}%`;
-  const result = useLiveQuery(
-    db
-      .select()
-      .from(hymns)
-      .where(sql`${hymns.title} LIKE ${pattern} ESCAPE '\\'`)
-      .orderBy(hymns.number)
-      .limit(100),
-  );
+  const [state, setState] = useState<{
+    data: ReadonlyArray<Hymn> | undefined;
+    error: Error | undefined;
+  }>({ data: trimmed ? undefined : [], error: undefined });
 
-  const data = useMemo(() => {
-    if (!trimmed) return [] as ReadonlyArray<Hymn>;
-    return result.data ? result.data.map(mapRow) : undefined;
-  }, [trimmed, result.data]);
+  useEffect(() => {
+    if (!trimmed) {
+      setState({ data: [], error: undefined });
+      return;
+    }
+    let cancelled = false;
+    // Reset to `undefined` (not the previous query's rows) so the caller's
+    // `isLoading` derivation stays true while the new query is in flight —
+    // otherwise the UI briefly shows stale results with `isLoading === false`.
+    setState({ data: undefined, error: undefined });
+    hymnRepository
+      .searchHymns(trimmed)
+      .then((rows) => {
+        if (!cancelled) setState({ data: rows, error: undefined });
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) {
+          setState({
+            data: [],
+            error: e instanceof Error ? e : new Error(String(e)),
+          });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [trimmed]);
 
   return {
-    data,
-    isLoading: trimmed.length > 0 && data === undefined,
-    error: result.error,
+    data: state.data,
+    isLoading: trimmed.length > 0 && state.data === undefined,
+    error: state.error,
   };
 }
