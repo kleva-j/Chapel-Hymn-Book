@@ -66,7 +66,7 @@ export default function HymnsScreen() {
   return (
     <View
       className="flex-1 bg-background"
-      style={{ paddingTop: insets.top }}
+      style={{ paddingTop: Math.max(insets.top - 48, 0) }}
     >
       <FlatList
         data={hymns as Hymn[]}
@@ -105,8 +105,12 @@ function Separator() {
 
 function HymnRow({ hymn }: { hymn: Hymn }) {
   const onPress = useCallback(() => {
-    router.push({ pathname: "/hymn/[id]", params: { id: hymn.id } });
-  }, [hymn.id]);
+    router.push({
+      pathname: "/hymn/[number]",
+      // Route params are strings in expo-router — coerce explicitly.
+      params: { number: String(hymn.number) },
+    });
+  }, [hymn.number]);
 
   return (
     <Pressable
@@ -119,10 +123,7 @@ function HymnRow({ hymn }: { hymn: Hymn }) {
         </Text>
       </View>
       <View className="flex-1 pr-2">
-        <Text
-          className="text-foreground text-base"
-          numberOfLines={1}
-        >
+        <Text className="text-foreground text-base" numberOfLines={1}>
           {hymn.title}
         </Text>
         {hymn.language && hymn.language !== "English" ? (
