@@ -1,7 +1,5 @@
 /**
- * Shared UI components
- * This module will contain reusable components across features
+ * Shared UI components barrel.
  */
 
-// Placeholder for shared components
-export {};
+export * from "./highlighted-text";
