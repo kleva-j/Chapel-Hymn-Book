@@ -14,10 +14,16 @@ import * as Haptics from "expo-haptics";
 
 import { Container } from "../../components/container";
 import type { Hymn } from "../../src/data/models";
-import { hymnOfDay, randomHymn, useHymns } from "../../src/utils";
+import {
+  hymnOfDay,
+  randomHymn,
+  useHymns,
+  useRecentHistory,
+} from "../../src/utils";
 
 export default function Home() {
   const { data: hymns, isLoading, error } = useHymns();
+  const { data: recent } = useRecentHistory(1);
   const insets = useSafeAreaInsets();
 
   // Memoize the daily pick so the same render of the screen doesn't reshuffle
@@ -26,6 +32,8 @@ export default function Home() {
     () => (hymns ? hymnOfDay(hymns) : undefined),
     [hymns],
   );
+
+  const lastViewed = recent && recent.length > 0 ? recent[0] : undefined;
 
   if (error) {
     return (
@@ -69,6 +77,10 @@ export default function Home() {
       </View>
 
       {featured ? <FeaturedCard hymn={featured} /> : null}
+
+      {lastViewed && lastViewed.id !== featured?.id ? (
+        <ContinueReadingCard hymn={lastViewed} />
+      ) : null}
 
       <View className="mt-5">
         <Text className="text-muted text-xs uppercase tracking-widest mb-2">
@@ -160,6 +172,44 @@ function FeaturedCard({ hymn }: { hymn: Hymn }) {
             style={{ marginLeft: 6 }}
           />
         </View>
+      </Surface>
+    </Pressable>
+  );
+}
+
+function ContinueReadingCard({ hymn }: { hymn: Hymn }) {
+  const foreground = useThemeColor("foreground");
+  const onPress = useCallback(() => {
+    if (Platform.OS === "ios") Haptics.selectionAsync();
+    router.push({
+      pathname: "/hymn/[number]",
+      params: { number: String(hymn.number) },
+    });
+  }, [hymn.number]);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Continue reading Hymn ${hymn.number}: ${hymn.title}`}
+      className="mt-3"
+    >
+      <Surface variant="secondary" className="p-4 rounded-xl flex-row items-center">
+        <View className="w-8 h-8 rounded-full bg-accent items-center justify-center mr-3">
+          <Ionicons name="time" size={16} color={foreground} />
+        </View>
+        <View className="flex-1">
+          <Text className="text-muted text-xs uppercase tracking-widest">
+            Continue reading
+          </Text>
+          <Text
+            className="text-foreground text-base font-semibold mt-0.5"
+            numberOfLines={1}
+          >
+            #{hymn.number} · {hymn.title}
+          </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color={foreground} />
       </Surface>
     </Pressable>
   );
