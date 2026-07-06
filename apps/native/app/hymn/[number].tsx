@@ -14,12 +14,12 @@ import { Ionicons } from "@expo/vector-icons";
 
 import * as Haptics from "expo-haptics";
 
-import { useHymn } from "../../src/utils/use-hymns";
+import { useHymnByNumber } from "../../src/utils/use-hymns";
 
 export default function HymnDetailScreen() {
-  const params = useLocalSearchParams<{ id: string }>();
-  const id = Number.parseInt(params.id ?? "0", 10);
-  const { data: hymn, isLoading, error } = useHymn(id);
+  const params = useLocalSearchParams<{ number: string }>();
+  const number = Number.parseInt(params.number ?? "0", 10);
+  const { data: hymn, isLoading, error } = useHymnByNumber(number);
   const insets = useSafeAreaInsets();
   const foreground = useThemeColor("foreground");
 

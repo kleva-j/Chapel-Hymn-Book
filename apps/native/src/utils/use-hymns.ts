@@ -71,6 +71,35 @@ export function useHymn(id: number): UseHymnResult {
 }
 
 /**
+ * Look up a hymn by its canonical `hymns.number` (the digit shown in the
+ * book, stable across re-seeds). Used by the `/hymn/[number]` route so that
+ * deep links like `chapel-hymnbook://hymn/47` survive dataset updates and
+ * fresh installs, unlike the auto-increment `id`.
+ */
+export function useHymnByNumber(number: number): UseHymnResult {
+  const enabled = Number.isFinite(number) && number > 0;
+  // `useLiveQuery` fires unconditionally, so pass a sentinel value when
+  // disabled — otherwise a NaN / malformed route param would end up in the
+  // parameter bind for `eq(hymns.number, ...)` and either throw or return
+  // an unpredictable row. `-1` is safe because dataset numbers start at 1.
+  const lookupNumber = enabled ? number : -1;
+  const result = useLiveQuery(
+    db.select().from(hymns).where(eq(hymns.number, lookupNumber)).limit(1),
+  );
+
+  const data = useMemo(() => {
+    if (!enabled) return undefined;
+    return result.data && result.data[0] ? mapRow(result.data[0]) : undefined;
+  }, [enabled, result.data]);
+
+  return {
+    data,
+    isLoading: enabled && result.data === undefined,
+    error: result.error,
+  };
+}
+
+/**
  * Search against `hymns_fts` (with LIKE fallback) via the repository. Unlike
  * `useHymns()` this is not a `useLiveQuery` subscription — the search SQL is
  * built dynamically per query (number routing, FTS5 prefix tokens, fallback

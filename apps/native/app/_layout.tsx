@@ -19,7 +19,7 @@ function StackLayout() {
   return (
     <Stack screenOptions={{}}>
       <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-      <Stack.Screen name="hymn/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="hymn/[number]" options={{ headerShown: false }} />
       <Stack.Screen
         name="modal"
         options={{ title: "Modal", presentation: "modal" }}
