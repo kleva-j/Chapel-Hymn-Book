@@ -5,6 +5,14 @@
  * are generated from this file via `pnpm db:generate` and emitted into
  * `apps/native/drizzle/`. Add new tables / columns here, then run the script
  * to produce the next migration SQL.
+ *
+ * IMPORTANT — manual migrations:
+ *   `0001_search_fts.sql` provisions a SQLite **FTS5 virtual table** named
+ *   `hymns_fts` plus three sync triggers. Drizzle-kit cannot model virtual
+ *   tables, so that migration is hand-authored and its journal entry was
+ *   added manually. If you re-run `pnpm db:generate`, double-check that the
+ *   journal still includes the FTS5 entry and that `migrations.js` still
+ *   imports `0001_search_fts.sql`. See `apps/native/drizzle/0001_search_fts.sql`.
  */
 
 import { sql } from "drizzle-orm";
