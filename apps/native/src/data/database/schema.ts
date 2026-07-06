@@ -52,3 +52,51 @@ export const hymns = sqliteTable(
 
 export type HymnRow = typeof hymns.$inferSelect;
 export type HymnInsert = typeof hymns.$inferInsert;
+
+/**
+ * User-marked hymns. `hymnId` is the primary key so `favorite/unfavorite` is
+ * an INSERT / DELETE without a separate unique-index — a hymn is either in
+ * the set or it is not. Foreign key to `hymns(id)` with ON DELETE CASCADE
+ * cleans the table if a hymn ever gets removed by a dataset re-seed.
+ */
+export const favorites = sqliteTable(
+  "favorites",
+  {
+    hymnId: integer("hymn_id")
+      .primaryKey()
+      .references(() => hymns.id, { onDelete: "cascade" }),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`),
+  },
+  (t) => ({
+    createdAtIdx: index("idx_favorites_created_at").on(t.createdAt),
+  }),
+);
+
+export type FavoriteRow = typeof favorites.$inferSelect;
+export type FavoriteInsert = typeof favorites.$inferInsert;
+
+/**
+ * Recently viewed hymns. Primary key on `hymnId` means a repeat view UPSERTs
+ * the row (bump `viewedAt`) rather than growing a log — history stays a
+ * single row per hymn, sorted by most recent. `idx_history_viewed_at` keeps
+ * the "10 most recent" query O(log n).
+ */
+export const history = sqliteTable(
+  "history",
+  {
+    hymnId: integer("hymn_id")
+      .primaryKey()
+      .references(() => hymns.id, { onDelete: "cascade" }),
+    viewedAt: text("viewed_at")
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`),
+  },
+  (t) => ({
+    viewedAtIdx: index("idx_history_viewed_at").on(t.viewedAt),
+  }),
+);
+
+export type HistoryRow = typeof history.$inferSelect;
+export type HistoryInsert = typeof history.$inferInsert;
