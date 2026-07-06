@@ -45,6 +45,10 @@ export const sqliteDb = SQLite.openDatabaseSync(DATABASE_CONFIG.name, {
 
 // Enable WAL once at startup. Cheap and idempotent.
 sqliteDb.execSync("PRAGMA journal_mode = WAL;");
+// SQLite defaults foreign_keys OFF per connection. The favorites and history
+// tables reference hymns(id) with ON DELETE CASCADE — enabling this here
+// ensures that constraint is honored across the app.
+sqliteDb.execSync("PRAGMA foreign_keys = ON;");
 
 export const db = drizzle(sqliteDb, { schema });
 
