@@ -9,6 +9,7 @@ import { Stack } from "expo-router";
 import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 
 import { AppThemeProvider } from "../contexts/app-theme-context";
+import { SettingsProvider } from "../contexts/settings-context";
 import { initializeDatabase, sqliteDb } from "../src/data/database/service";
 
 export const unstable_settings = {
@@ -87,9 +88,11 @@ export default function Layout() {
       <KeyboardProvider>
         <AppThemeProvider>
           <HeroUINativeProvider>
-            <AppBootstrap>
-              <StackLayout />
-            </AppBootstrap>
+            <SettingsProvider>
+              <AppBootstrap>
+                <StackLayout />
+              </AppBootstrap>
+            </SettingsProvider>
           </HeroUINativeProvider>
         </AppThemeProvider>
       </KeyboardProvider>

@@ -17,12 +17,14 @@ import * as Haptics from "expo-haptics";
 import { useHymnByNumber } from "../../src/utils/use-hymns";
 import { useIsFavorite } from "../../src/utils/use-personalization";
 import { personalizationRepository } from "../../src/data/repositories/personalization-repository";
+import { useTypography } from "../../contexts/settings-context";
 
 export default function HymnDetailScreen() {
   const params = useLocalSearchParams<{ number: string }>();
   const number = Number.parseInt(params.number ?? "0", 10);
   const { data: hymn, isLoading, error } = useHymnByNumber(number);
   const { value: isFavorite } = useIsFavorite(hymn?.id ?? 0);
+  const typography = useTypography();
   const insets = useSafeAreaInsets();
   const foreground = useThemeColor("foreground");
 
@@ -96,13 +98,22 @@ export default function HymnDetailScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
       >
         <View className="px-5 pt-2 pb-2">
-          <Text className="text-muted text-xs tracking-widest">
+          <Text
+            className="text-muted tracking-widest"
+            style={{ fontSize: typography.eyebrowFontSize }}
+          >
             HYMN {hymn.number}
             {hymn.language && hymn.language !== "English"
               ? `  ·  ${hymn.language.toUpperCase()}`
               : ""}
           </Text>
-          <Text className="text-foreground text-2xl font-bold mt-1 leading-tight">
+          <Text
+            className="text-foreground font-bold mt-1 leading-tight"
+            style={{
+              fontSize: typography.titleFontSize,
+              fontFamily: typography.fontFamily,
+            }}
+          >
             {hymn.title}
           </Text>
         </View>
@@ -110,10 +121,20 @@ export default function HymnDetailScreen() {
         {hymn.chorus ? (
           <View className="px-5 mt-4">
             <Surface variant="secondary" className="p-4 rounded-lg">
-              <Text className="text-muted text-xs uppercase tracking-wider mb-2">
+              <Text
+                className="text-muted uppercase tracking-wider mb-2"
+                style={{ fontSize: typography.eyebrowFontSize }}
+              >
                 Chorus
               </Text>
-              <Text className="text-foreground text-base italic leading-7">
+              <Text
+                className="text-foreground italic"
+                style={{
+                  fontSize: typography.bodyFontSize,
+                  lineHeight: typography.bodyLineHeight,
+                  fontFamily: typography.italicFontFamily,
+                }}
+              >
                 {hymn.chorus}
               </Text>
             </Surface>
@@ -123,10 +144,23 @@ export default function HymnDetailScreen() {
         <View className="px-5 mt-6">
           {hymn.verses.map((verse, i) => (
             <View key={i} className="mb-6 flex-row">
-              <Text className="text-muted text-base font-semibold w-7">
+              <Text
+                className="text-muted font-semibold w-7"
+                style={{
+                  fontSize: typography.bodyFontSize,
+                  lineHeight: typography.bodyLineHeight,
+                }}
+              >
                 {i + 1}.
               </Text>
-              <Text className="text-foreground text-base leading-7 flex-1">
+              <Text
+                className="text-foreground flex-1"
+                style={{
+                  fontSize: typography.bodyFontSize,
+                  lineHeight: typography.bodyLineHeight,
+                  fontFamily: typography.fontFamily,
+                }}
+              >
                 {verse}
               </Text>
             </View>
