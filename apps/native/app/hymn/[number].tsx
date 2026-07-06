@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import {
   ActivityIndicator,
   ScrollView,
@@ -32,6 +32,14 @@ export default function HymnDetailScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     await personalizationRepository.toggleFavorite(hymn.id);
+  }, [hymn?.id]);
+
+  // Record the view once per mount for a valid hymn. onConflictDoUpdate on
+  // the history table's PK bumps viewedAt on repeat views instead of growing
+  // a log — see PR #15 recordView().
+  useEffect(() => {
+    if (!hymn) return;
+    void personalizationRepository.recordView(hymn.id);
   }, [hymn?.id]);
 
   const handleBack = useCallback(() => {
