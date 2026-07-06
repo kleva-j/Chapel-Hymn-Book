@@ -3,13 +3,15 @@ import { Link } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { useThemeColor } from "heroui-native";
 import React, { useCallback } from "react";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { ThemeToggle } from "../../components/theme-toggle";
+import { useFavoritesCount } from "../../src/utils/use-personalization";
 
 function DrawerLayout() {
   const themeColorForeground = useThemeColor("foreground");
   const themeColorBackground = useThemeColor("background");
+  const favoritesCount = useFavoritesCount();
 
   const renderThemeToggle = useCallback(() => <ThemeToggle />, []);
 
@@ -64,6 +66,33 @@ function DrawerLayout() {
                 <Ionicons name="add-outline" size={24} color={themeColorForeground} />
               </Pressable>
             </Link>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="favorites"
+        options={{
+          headerTitle: "Favorites",
+          drawerLabel: ({ color, focused }) => (
+            <View className="flex-row items-center">
+              <Text style={{ color: focused ? color : themeColorForeground }}>
+                Favorites
+              </Text>
+              {favoritesCount > 0 ? (
+                <View className="ml-2 min-w-[20px] h-5 px-1.5 rounded-full bg-accent items-center justify-center">
+                  <Text className="text-accent-foreground text-xs font-semibold">
+                    {favoritesCount}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+          ),
+          drawerIcon: ({ size, color, focused }) => (
+            <Ionicons
+              name="heart-outline"
+              size={size}
+              color={focused ? color : themeColorForeground}
+            />
           ),
         }}
       />

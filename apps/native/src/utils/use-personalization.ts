@@ -7,7 +7,7 @@
  */
 
 import { useMemo } from "react";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 
 import { db } from "../data/database/service";
@@ -92,11 +92,15 @@ export function useRecentHistory(limit = 10): UseHymnsResult {
 }
 
 /**
- * Reactive count of favorited hymns — used to badge the drawer entry.
+ * Reactive count of favorited hymns — used to badge the always-mounted
+ * drawer entry. Uses `COUNT(*)` so every favorite toggle ships a single
+ * integer over the JSI bridge rather than the full list of `hymn_id` rows.
  */
 export function useFavoritesCount(): number {
   const result = useLiveQuery(
-    db.select({ hymnId: favorites.hymnId }).from(favorites),
+    db
+      .select({ value: sql<number>`count(*)` })
+      .from(favorites),
   );
-  return result.data?.length ?? 0;
+  return result.data?.[0]?.value ?? 0;
 }
