@@ -15,13 +15,24 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 import { useHymnByNumber } from "../../src/utils/use-hymns";
+import { useIsFavorite } from "../../src/utils/use-personalization";
+import { personalizationRepository } from "../../src/data/repositories/personalization-repository";
 
 export default function HymnDetailScreen() {
   const params = useLocalSearchParams<{ number: string }>();
   const number = Number.parseInt(params.number ?? "0", 10);
   const { data: hymn, isLoading, error } = useHymnByNumber(number);
+  const { value: isFavorite } = useIsFavorite(hymn?.id ?? 0);
   const insets = useSafeAreaInsets();
   const foreground = useThemeColor("foreground");
+
+  const handleToggleFavorite = useCallback(async () => {
+    if (!hymn) return;
+    if (Platform.OS === "ios") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    await personalizationRepository.toggleFavorite(hymn.id);
+  }, [hymn?.id]);
 
   const handleBack = useCallback(() => {
     if (Platform.OS === "ios") {
@@ -69,6 +80,8 @@ export default function HymnDetailScreen() {
         onBack={handleBack}
         foreground={foreground}
         title={`Hymn ${hymn.number}`}
+        isFavorite={isFavorite}
+        onToggleFavorite={handleToggleFavorite}
       />
       <ScrollView
         className="flex-1"
@@ -120,9 +133,23 @@ type HymnHeaderProps = {
   onBack: () => void;
   foreground: string;
   title: string;
+  /**
+   * `undefined` while the `useIsFavorite` subscription is still resolving.
+   * The heart toggle is disabled during that window so a fast tap cannot
+   * invert an unknown-truth state.
+   */
+  isFavorite?: boolean | undefined;
+  onToggleFavorite?: () => void;
 };
 
-function Header({ onBack, foreground, title }: HymnHeaderProps) {
+function Header({
+  onBack,
+  foreground,
+  title,
+  isFavorite,
+  onToggleFavorite,
+}: HymnHeaderProps) {
+  const favoriteKnown = typeof isFavorite === "boolean";
   return (
     <View className="flex-row items-center h-12 px-2 border-b border-muted/10">
       <Pressable
@@ -135,11 +162,42 @@ function Header({ onBack, foreground, title }: HymnHeaderProps) {
         <Ionicons name="chevron-back" size={26} color={foreground} />
       </Pressable>
       <Text
-        className="flex-1 text-foreground text-base font-semibold pr-11"
+        className="flex-1 text-foreground text-base font-semibold"
         numberOfLines={1}
       >
         {title}
       </Text>
+      {onToggleFavorite ? (
+        <Pressable
+          onPress={onToggleFavorite}
+          disabled={!favoriteKnown}
+          accessibilityRole="button"
+          accessibilityState={{
+            selected: isFavorite === true,
+            busy: !favoriteKnown,
+            disabled: !favoriteKnown,
+          }}
+          accessibilityLabel={
+            !favoriteKnown
+              ? "Loading favorite state"
+              : isFavorite
+                ? "Remove from favorites"
+                : "Add to favorites"
+          }
+          hitSlop={12}
+          className={`w-11 h-11 items-center justify-center ${
+            favoriteKnown ? "active:opacity-60" : "opacity-40"
+          }`}
+        >
+          <Ionicons
+            name={isFavorite === true ? "heart" : "heart-outline"}
+            size={24}
+            color={foreground}
+          />
+        </Pressable>
+      ) : (
+        <View className="w-11" />
+      )}
     </View>
   );
 }
