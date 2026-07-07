@@ -96,6 +96,9 @@ export default function SettingsScreen() {
         <Pressable
           onPress={handleReset}
           accessibilityRole="button"
+          accessibilityLabel="Reset display settings to defaults"
+          accessibilityHint="Restores font size, family, and line spacing to the defaults"
+          hitSlop={8}
           className="py-3 items-center active:opacity-60"
         >
           <Text className="text-muted text-sm font-semibold uppercase tracking-widest">
@@ -152,6 +155,8 @@ function SegmentedControl<T extends string>({
             }}
             accessibilityRole="button"
             accessibilityState={{ selected }}
+            accessibilityLabel={opt.label}
+            hitSlop={6}
             className={`flex-1 h-10 rounded-lg items-center justify-center ${
               selected ? "bg-background" : ""
             }`}
