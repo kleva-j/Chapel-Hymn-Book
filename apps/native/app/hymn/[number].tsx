@@ -19,10 +19,24 @@ import { useIsFavorite } from "../../src/utils/use-personalization";
 import { personalizationRepository } from "../../src/data/repositories/personalization-repository";
 import { shareHymn } from "../../src/utils/share-hymn";
 import { useTypography } from "../../contexts/settings-context";
+import { ErrorBoundary } from "../../src/components";
 
 export default function HymnDetailScreen() {
   const params = useLocalSearchParams<{ number: string }>();
   const number = Number.parseInt(params.number ?? "0", 10);
+  // Route-scoped boundary: a render throw here (e.g. bad hymn row shape,
+  // typography helper regression) shows the recovery UI in this screen
+  // without unmounting the drawer / stack underneath. `resetKeys` on
+  // `number` clears the boundary when the user navigates to a different
+  // hymn, so yesterday's failure doesn't sticky-mask a fresh route.
+  return (
+    <ErrorBoundary label="Hymn detail" resetKeys={[number]}>
+      <HymnDetailInner number={number} />
+    </ErrorBoundary>
+  );
+}
+
+function HymnDetailInner({ number }: { number: number }) {
   const { data: hymn, isLoading, error } = useHymnByNumber(number);
   const { value: isFavorite } = useIsFavorite(hymn?.id ?? 0);
   const typography = useTypography();
