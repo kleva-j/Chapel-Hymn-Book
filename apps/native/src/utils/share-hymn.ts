@@ -1,42 +1,22 @@
 /**
- * Compose the text payload used by the hymn detail Share sheet.
- *
- * Format is optimized for messaging apps (SMS, WhatsApp, Slack): title on
- * top, chorus in italics-style prefix if present, verses numbered, and a
- * deep-link footer so recipients with the app installed land directly on
- * the same hymn.
+ * Native Share sheet wiring. Delegates the text payload to `share-text.ts`
+ * (which is unit-tested) and only handles the RN Share side effects here.
  */
 
 import { Share } from "react-native";
-
-import type { Hymn } from "../data/models";
 import Constants from "expo-constants";
 
-function deepLinkFor(hymn: Hymn): string {
+import type { Hymn } from "../data/models";
+import {
+  DEFAULT_LINK_SCHEME,
+  buildShareText,
+  deepLinkFor,
+} from "./share-text";
+
+function resolveScheme(): string {
   const scheme = Constants.expoConfig?.scheme;
   const primary = Array.isArray(scheme) ? scheme[0] : scheme;
-  return `${primary ?? "chapel-hymnbook"}://hymn/${hymn.number}`;
-}
-
-export function buildShareText(hymn: Hymn): string {
-  const parts: string[] = [];
-  parts.push(`Hymn ${hymn.number}: ${hymn.title}`);
-  if (hymn.language && hymn.language !== "English") {
-    parts.push(`Language: ${hymn.language}`);
-  }
-  parts.push("");
-  if (hymn.chorus) {
-    parts.push("Chorus");
-    parts.push(hymn.chorus);
-    parts.push("");
-  }
-  hymn.verses.forEach((verse, i) => {
-    parts.push(`${i + 1}. ${verse}`);
-    parts.push("");
-  });
-  parts.push("— Chapel Hymnbook");
-  parts.push(deepLinkFor(hymn));
-  return parts.join("\n");
+  return primary ?? DEFAULT_LINK_SCHEME;
 }
 
 /**
@@ -47,8 +27,9 @@ export function buildShareText(hymn: Hymn): string {
  * than propagated so a share-sheet failure never crashes the detail screen.
  */
 export async function shareHymn(hymn: Hymn): Promise<string | undefined> {
-  const message = buildShareText(hymn);
-  const url = deepLinkFor(hymn);
+  const scheme = resolveScheme();
+  const message = buildShareText(hymn, scheme);
+  const url = deepLinkFor(hymn, scheme);
   try {
     const result = await Share.share(
       // iOS reads `url` as a separate share item so most apps preview the
@@ -66,3 +47,7 @@ export async function shareHymn(hymn: Hymn): Promise<string | undefined> {
     return undefined;
   }
 }
+
+// Re-export the pure helpers so existing utils-barrel consumers can still
+// reach `buildShareText` from `../utils/share-hymn`.
+export { buildShareText, deepLinkFor, DEFAULT_LINK_SCHEME };

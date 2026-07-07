@@ -34,14 +34,11 @@ function sqliteTimestampToIsoUtc(s: string): string {
     : s;
 }
 
-/**
- * Escape SQL `LIKE` wildcards in user input. Without this, a query of `%`
- * or `_` matches everything / any single character instead of those literal
- * characters. Used together with an `ESCAPE '\\'` clause on the SQL side.
- */
-export function escapeLike(s: string): string {
-  return s.replace(/[\\%_]/g, (c) => `\\${c}`);
-}
+// `escapeLike` and `buildFtsQuery` live in a separate module so unit tests
+// can import them without pulling in the Drizzle DB service. Re-export here
+// so existing call sites and consumers keep working.
+export { buildFtsQuery, escapeLike } from "./search-helpers";
+import { buildFtsQuery, escapeLike } from "./search-helpers";
 
 export function mapRow(row: HymnRow): Hymn {
   let verses: string[] = [];
@@ -218,30 +215,6 @@ export const hymnRepository = {
     return likeRows.map(mapRow);
   },
 };
-
-/**
- * Build an FTS5 query string from raw user input.
- *
- * Splits on whitespace, then strips every character that is not a Unicode
- * letter or number (`\p{L}\p{N}`). This is broader than the previous
- * FTS5-operator blocklist — it also drops `/ + = '` and any other punctuation
- * that would trip the FTS5 parser with `fts5: syntax error near ...` while
- * preserving accented Latin (é, ô) and non-Latin word characters.
- *
- * `.normalize("NFKC")` unifies compatibility variants (e.g. full-width
- * digits) so token detection matches how the tokenizer indexed them.
- *
- * Returns an empty string if nothing parseable survives — caller should fall
- * back to LIKE in that case.
- */
-function buildFtsQuery(input: string): string {
-  const tokens = input
-    .split(/\s+/)
-    .map((t) => t.normalize("NFKC").replace(/[^\p{L}\p{N}]+/gu, ""))
-    .filter((t) => t.length > 0)
-    .map((t) => `${t}*`);
-  return tokens.join(" ");
-}
 
 /**
  * One-shot Effect for app initialization. Reads no longer go through Effect
