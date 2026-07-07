@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Surface, useThemeColor } from "heroui-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -119,7 +120,10 @@ function HymnDetailInner({ number }: { number: number }) {
         className="flex-1"
         contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
       >
-        <View className="px-5 pt-2 pb-2">
+        <Animated.View
+          entering={FadeIn.duration(220)}
+          className="px-5 pt-2 pb-2"
+        >
           <Text
             className="text-muted tracking-widest"
             style={{ fontSize: typography.eyebrowFontSize }}
@@ -138,10 +142,13 @@ function HymnDetailInner({ number }: { number: number }) {
           >
             {hymn.title}
           </Text>
-        </View>
+        </Animated.View>
 
         {hymn.chorus ? (
-          <View className="px-5 mt-4">
+          <Animated.View
+            entering={FadeInDown.delay(60).duration(240)}
+            className="px-5 mt-4"
+          >
             <Surface variant="secondary" className="p-4 rounded-lg">
               <Text
                 className="text-muted uppercase tracking-wider mb-2"
@@ -160,12 +167,16 @@ function HymnDetailInner({ number }: { number: number }) {
                 {hymn.chorus}
               </Text>
             </Surface>
-          </View>
+          </Animated.View>
         ) : null}
 
         <View className="px-5 mt-6">
           {hymn.verses.map((verse, i) => (
-            <View key={i} className="mb-6 flex-row">
+            <Animated.View
+              key={i}
+              entering={FadeInDown.delay(90 + i * 40).duration(220)}
+              className="mb-6 flex-row"
+            >
               <Text
                 className="text-muted font-semibold w-7"
                 style={{
@@ -185,7 +196,7 @@ function HymnDetailInner({ number }: { number: number }) {
               >
                 {verse}
               </Text>
-            </View>
+            </Animated.View>
           ))}
         </View>
       </ScrollView>

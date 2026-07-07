@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -76,10 +77,16 @@ export default function Home() {
         </Text>
       </View>
 
-      {featured ? <FeaturedCard hymn={featured} /> : null}
+      {featured ? (
+        <Animated.View entering={FadeInDown.duration(280)}>
+          <FeaturedCard hymn={featured} />
+        </Animated.View>
+      ) : null}
 
       {lastViewed && lastViewed.id !== featured?.id ? (
-        <ContinueReadingCard hymn={lastViewed} />
+        <Animated.View entering={FadeInDown.delay(80).duration(260)}>
+          <ContinueReadingCard hymn={lastViewed} />
+        </Animated.View>
       ) : null}
 
       <View className="mt-5">
