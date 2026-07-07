@@ -186,6 +186,13 @@ function HymnRow({ hymn, query }: { hymn: Hymn; query: string }) {
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Hymn ${hymn.number}, ${hymn.title}${
+        hymn.language && hymn.language !== "English"
+          ? `, ${hymn.language}`
+          : ""
+      }`}
+      accessibilityHint="Opens the hymn detail screen"
       className="flex-row items-center px-4 py-3 active:bg-muted/10"
     >
       <View className="w-12">
