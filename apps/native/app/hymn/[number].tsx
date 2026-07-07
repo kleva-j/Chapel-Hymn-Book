@@ -17,6 +17,7 @@ import * as Haptics from "expo-haptics";
 import { useHymnByNumber } from "../../src/utils/use-hymns";
 import { useIsFavorite } from "../../src/utils/use-personalization";
 import { personalizationRepository } from "../../src/data/repositories/personalization-repository";
+import { shareHymn } from "../../src/utils/share-hymn";
 import { useTypography } from "../../contexts/settings-context";
 
 export default function HymnDetailScreen() {
@@ -35,6 +36,12 @@ export default function HymnDetailScreen() {
     }
     await personalizationRepository.toggleFavorite(hymn.id);
   }, [hymn?.id]);
+
+  const handleShare = useCallback(() => {
+    if (!hymn) return;
+    if (Platform.OS === "ios") Haptics.selectionAsync();
+    void shareHymn(hymn);
+  }, [hymn]);
 
   // Record the view once per mount for a valid hymn. onConflictDoUpdate on
   // the history table's PK bumps viewedAt on repeat views instead of growing
@@ -92,6 +99,7 @@ export default function HymnDetailScreen() {
         title={`Hymn ${hymn.number}`}
         isFavorite={isFavorite}
         onToggleFavorite={handleToggleFavorite}
+        onShare={handleShare}
       />
       <ScrollView
         className="flex-1"
@@ -182,6 +190,7 @@ type HymnHeaderProps = {
    */
   isFavorite?: boolean | undefined;
   onToggleFavorite?: () => void;
+  onShare?: () => void;
 };
 
 function Header({
@@ -190,6 +199,7 @@ function Header({
   title,
   isFavorite,
   onToggleFavorite,
+  onShare,
 }: HymnHeaderProps) {
   const favoriteKnown = typeof isFavorite === "boolean";
   return (
@@ -209,6 +219,21 @@ function Header({
       >
         {title}
       </Text>
+      {onShare ? (
+        <Pressable
+          onPress={onShare}
+          accessibilityRole="button"
+          accessibilityLabel="Share this hymn"
+          hitSlop={12}
+          className="w-11 h-11 items-center justify-center active:opacity-60"
+        >
+          <Ionicons
+            name={Platform.OS === "ios" ? "share-outline" : "share-social-outline"}
+            size={22}
+            color={foreground}
+          />
+        </Pressable>
+      ) : null}
       {onToggleFavorite ? (
         <Pressable
           onPress={onToggleFavorite}
