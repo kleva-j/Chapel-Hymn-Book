@@ -10,6 +10,7 @@ import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 
 import { AppThemeProvider } from "../contexts/app-theme-context";
 import { SettingsProvider } from "../contexts/settings-context";
+import { ErrorBoundary } from "../src/components";
 import { initializeDatabase, sqliteDb } from "../src/data/database/service";
 
 export const unstable_settings = {
@@ -89,9 +90,20 @@ export default function Layout() {
         <AppThemeProvider>
           <HeroUINativeProvider>
             <SettingsProvider>
-              <AppBootstrap>
-                <StackLayout />
-              </AppBootstrap>
+              {/*
+                Top-level React error boundary. Catches render / lifecycle
+                throws anywhere in the app tree (`useLiveQuery` result mis-
+                shape, provider mismatches, screen crashes). Recovery UI
+                re-mounts the whole app tree on tap. Route-scoped boundaries
+                (see `hymn/[number]`) reset first without falling through
+                to this one, so a single-screen crash does not blow away
+                shared bootstrap state (DB init, settings hydrate).
+              */}
+              <ErrorBoundary label="App">
+                <AppBootstrap>
+                  <StackLayout />
+                </AppBootstrap>
+              </ErrorBoundary>
             </SettingsProvider>
           </HeroUINativeProvider>
         </AppThemeProvider>
