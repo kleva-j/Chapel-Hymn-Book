@@ -85,13 +85,20 @@ function FavoriteRow({ hymn }: { hymn: Hymn }) {
   const onPress = useCallback(() => {
     router.push({
       pathname: "/hymn/[number]",
-      params: { number: hymn.number },
+      params: { number: String(hymn.number) },
     });
   }, [hymn.number]);
 
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Hymn ${hymn.number}, ${hymn.title}${
+        hymn.language && hymn.language !== "English"
+          ? `, ${hymn.language}`
+          : ""
+      }`}
+      accessibilityHint="Opens this favorited hymn"
       className="flex-row items-center px-4 py-3 active:bg-muted/10"
     >
       <View className="w-12">
