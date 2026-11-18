@@ -40,10 +40,14 @@ export default function SettingsScreen() {
         <SegmentedControl<FontSize>
           value={settings.fontSize}
           options={[
-            { value: "small", label: "S" },
-            { value: "medium", label: "M" },
-            { value: "large", label: "L" },
-            { value: "x-large", label: "XL" },
+            { value: "small", label: "S", accessibilityLabel: "Small" },
+            { value: "medium", label: "M", accessibilityLabel: "Medium" },
+            { value: "large", label: "L", accessibilityLabel: "Large" },
+            {
+              value: "x-large",
+              label: "XL",
+              accessibilityLabel: "Extra large",
+            },
           ]}
           onChange={(v) => update({ fontSize: v })}
         />
@@ -96,6 +100,9 @@ export default function SettingsScreen() {
         <Pressable
           onPress={handleReset}
           accessibilityRole="button"
+          accessibilityLabel="Reset display settings to defaults"
+          accessibilityHint="Restores font size, family, and line spacing to the defaults"
+          hitSlop={8}
           className="py-3 items-center active:opacity-60"
         >
           <Text className="text-muted text-sm font-semibold uppercase tracking-widest">
@@ -127,6 +134,7 @@ function Section({
 interface Option<T extends string> {
   readonly value: T;
   readonly label: string;
+  readonly accessibilityLabel?: string;
 }
 
 function SegmentedControl<T extends string>({
@@ -152,6 +160,8 @@ function SegmentedControl<T extends string>({
             }}
             accessibilityRole="button"
             accessibilityState={{ selected }}
+            accessibilityLabel={opt.accessibilityLabel ?? opt.label}
+            hitSlop={{ top: 6, bottom: 6 }}
             className={`flex-1 h-10 rounded-lg items-center justify-center ${
               selected ? "bg-background" : ""
             }`}

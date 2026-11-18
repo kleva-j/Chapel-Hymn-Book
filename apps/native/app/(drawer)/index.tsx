@@ -90,16 +90,19 @@ export default function Home() {
           <ActionTile
             icon="musical-notes"
             label="Browse"
+            hint="Opens the full hymn list"
             onPress={() => router.push("/(drawer)/(tabs)")}
           />
           <ActionTile
             icon="search"
             label="Search"
+            hint="Opens the hymn list with the search field ready"
             onPress={() => router.push("/(drawer)/(tabs)")}
           />
           <ActionTile
             icon="shuffle"
             label="Random"
+            hint="Opens a randomly picked hymn"
             onPress={() => {
               const pick = randomHymn(hymns, featured?.number);
               if (pick) {
@@ -113,6 +116,7 @@ export default function Home() {
           <ActionTile
             icon="information-circle-outline"
             label="About"
+            hint="Opens the About screen with app version and attribution"
             onPress={() => router.push("/modal")}
           />
         </View>
@@ -139,7 +143,12 @@ function FeaturedCard({ hymn }: { hymn: Hymn }) {
   }, [hymn.number]);
 
   return (
-    <Pressable onPress={onPress} accessibilityRole="button">
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Open Hymn ${hymn.number}: ${hymn.title}`}
+      accessibilityHint="Opens the hymn detail screen"
+    >
       <Surface variant="secondary" className="p-5 rounded-2xl">
         <Text className="text-muted text-xs uppercase tracking-widest">
           Hymn of the Day · #{hymn.number}
@@ -218,10 +227,12 @@ function ContinueReadingCard({ hymn }: { hymn: Hymn }) {
 function ActionTile({
   icon,
   label,
+  hint,
   onPress,
 }: {
   icon: React.ComponentProps<typeof Ionicons>["name"];
   label: string;
+  hint?: string;
   onPress: () => void;
 }) {
   const foreground = useThemeColor("foreground");
@@ -232,7 +243,12 @@ function ActionTile({
 
   return (
     <View className="basis-1/2 p-1">
-      <Pressable onPress={handlePress} accessibilityRole="button">
+      <Pressable
+        onPress={handlePress}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint={hint}
+      >
         <Surface variant="secondary" className="p-4 rounded-xl items-start">
           <Ionicons name={icon} size={22} color={foreground} />
           <Text className="text-foreground text-base font-medium mt-2">
